@@ -1,11 +1,11 @@
 package com.bignerdranch.android.geoquiz
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
     private lateinit var trueButton: Button
@@ -20,7 +20,8 @@ class MainActivity : AppCompatActivity() {
         Question(R.string.question_mideast, false),
         Question(R.string.question_africa, false),
         Question(R.string.question_americas, true),
-        Question(R.string.question_asia, true))
+        Question(R.string.question_asia, true)
+    )
 
     private var currentIndex = 0
 
