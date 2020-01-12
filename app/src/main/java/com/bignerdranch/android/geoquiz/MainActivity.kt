@@ -102,10 +102,14 @@ class MainActivity : AppCompatActivity() {
   private fun updateQuestion() {
     val questionTextResId = questionBank[currentIndex].textResId
     questionTextView.setText(questionTextResId)
+    trueButton.isEnabled =  questionBank[currentIndex].isEnabled;
+    falseButton.isEnabled = questionBank[currentIndex].isEnabled;
   }
 
   private fun checkAnswer(userAnswer: Boolean) {
     val correctAnswer = questionBank[currentIndex].answer
+
+    questionBank[currentIndex].isEnabled = false;
 
     val messageResId = if (userAnswer == correctAnswer) {
       R.string.correct_toast
@@ -115,5 +119,7 @@ class MainActivity : AppCompatActivity() {
 
     Toast.makeText(this, messageResId, Toast.LENGTH_SHORT)
       .show()
+
+    updateQuestion()
   }
 }
