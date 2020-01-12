@@ -102,19 +102,29 @@ class MainActivity : AppCompatActivity() {
   private fun updateQuestion() {
     val questionTextResId = questionBank[currentIndex].textResId
     questionTextView.setText(questionTextResId)
-    trueButton.isEnabled =  questionBank[currentIndex].isEnabled;
+    trueButton.isEnabled = questionBank[currentIndex].isEnabled;
     falseButton.isEnabled = questionBank[currentIndex].isEnabled;
   }
 
   private fun checkAnswer(userAnswer: Boolean) {
-    val correctAnswer = questionBank[currentIndex].answer
+    val question = questionBank[currentIndex];
 
-    questionBank[currentIndex].isEnabled = false;
+    question.submitAnswer(userAnswer);
 
-    val messageResId = if (userAnswer == correctAnswer) {
+
+    val messageResId = if (question.isCorrect()) {
       R.string.correct_toast
     } else {
       R.string.incorrect_toast
+    }
+
+    val allQuestionsAnswered: Boolean = questionBank.all { q -> q.isAnswered() }
+    if (allQuestionsAnswered) {
+      val percentage: Float =
+        (questionBank.filter { it.isCorrect() }.size / questionBank.size.toFloat()) * 100
+
+      Toast.makeText(this, getString(R.string.percentage_text, percentage), Toast.LENGTH_SHORT)
+        .show()
     }
 
     Toast.makeText(this, messageResId, Toast.LENGTH_SHORT)
