@@ -8,9 +8,9 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 
 private const val TAG = "MainActivity"
+private const val KEY_INDEX = "index"
 
 class MainActivity : AppCompatActivity() {
 
@@ -33,6 +33,9 @@ class MainActivity : AppCompatActivity() {
     val provider = ViewModelProvider(this)
     val quizViewModel = provider.get(QuizViewModel::class.java)
     Log.d(TAG, "Got a QuizViewModel: $quizViewModel")
+
+    quizViewModel.currentIndex =
+      savedInstanceState?.getInt(KEY_INDEX, 0) ?: 0
 
     trueButton = findViewById(R.id.true_button)
     falseButton = findViewById(R.id.false_button)
@@ -76,6 +79,12 @@ class MainActivity : AppCompatActivity() {
   override fun onPause() {
     super.onPause()
     Log.d(TAG, "onPause() called")
+  }
+
+  override fun onSaveInstanceState(savedInstanceState: Bundle) {
+    super.onSaveInstanceState(savedInstanceState)
+    Log.i(TAG, "onSaveInstanceState")
+    savedInstanceState.putInt(KEY_INDEX,  quizViewModel.currentIndex)
   }
 
   override fun onStop() {
