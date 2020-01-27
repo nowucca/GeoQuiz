@@ -7,6 +7,8 @@ import android.widget.ImageButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 
 private const val TAG = "MainActivity"
 
@@ -18,21 +20,19 @@ class MainActivity : AppCompatActivity() {
   private lateinit var previousButton: ImageButton
   private lateinit var questionTextView: TextView
 
-  private val questionBank = listOf(
-    Question(R.string.question_australia, true),
-    Question(R.string.question_oceans, true),
-    Question(R.string.question_mideast, false),
-    Question(R.string.question_africa, false),
-    Question(R.string.question_americas, true),
-    Question(R.string.question_asia, true)
-  )
 
-  private var currentIndex = 0
+  private val quizViewModel: QuizViewModel by lazy {
+    ViewModelProvider(this).get(QuizViewModel::class.java)
+  }
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     Log.d(TAG, "onCreate(Bundle?) called")
     setContentView(R.layout.activity_main)
+
+    val provider = ViewModelProvider(this)
+    val quizViewModel = provider.get(QuizViewModel::class.java)
+    Log.d(TAG, "Got a QuizViewModel: $quizViewModel")
 
     trueButton = findViewById(R.id.true_button)
     falseButton = findViewById(R.id.false_button)
@@ -89,27 +89,26 @@ class MainActivity : AppCompatActivity() {
   }
 
   private fun previousQuestion() {
-    currentIndex = (currentIndex - 1)
-    if (currentIndex < 0) currentIndex += questionBank.size
+    quizViewModel.moveToPrevious();
     updateQuestion()
   }
 
   private fun nextQuestion() {
-    currentIndex = (currentIndex + 1) % questionBank.size
+    quizViewModel.moveToNext();
     updateQuestion()
   }
 
   private fun updateQuestion() {
-    val questionTextResId = questionBank[currentIndex].textResId
+    val questionTextResId = quizViewModel.currentQuestionText
     questionTextView.setText(questionTextResId)
-    trueButton.isEnabled = questionBank[currentIndex].isEnabled;
-    falseButton.isEnabled = questionBank[currentIndex].isEnabled;
+    trueButton.isEnabled = quizViewModel.currentQuestionEnabled
+    falseButton.isEnabled = quizViewModel.currentQuestionEnabled
   }
 
   private fun checkAnswer(userAnswer: Boolean) {
-    val question = questionBank[currentIndex];
+    val question = quizViewModel.currentQuestion
 
-    question.submitAnswer(userAnswer);
+    question.submitAnswer(userAnswer)
 
 
     val messageResId = if (question.isCorrect()) {
@@ -118,12 +117,8 @@ class MainActivity : AppCompatActivity() {
       R.string.incorrect_toast
     }
 
-    val allQuestionsAnswered: Boolean = questionBank.all { q -> q.isAnswered() }
-    if (allQuestionsAnswered) {
-      val percentage: Float =
-        (questionBank.filter { it.isCorrect() }.size / questionBank.size.toFloat()) * 100
-
-      Toast.makeText(this, getString(R.string.percentage_text, percentage), Toast.LENGTH_SHORT)
+    if (quizViewModel.allQuestionsAnswered) {
+      Toast.makeText(this, getString(R.string.percentage_text, quizViewModel.correctPercentage()), Toast.LENGTH_SHORT)
         .show()
     }
 
