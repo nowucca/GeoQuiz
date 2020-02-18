@@ -20,9 +20,6 @@ class QuizViewModel : ViewModel() {
 
   var currentIndex = 0
 
-  val currentQuestionAnswer: Boolean
-    get() = questionBank[currentIndex].answer
-
   val currentQuestionText: Int
     get() = questionBank[currentIndex].textResId
 
@@ -46,6 +43,7 @@ class QuizViewModel : ViewModel() {
 
   fun moveToPrevious() {
     currentIndex = (currentIndex - 1)
+    Log.d(TAG, "Current index set to "+currentIndex)
     if (currentIndex < 0) currentIndex += questionBank.size
   }
 
