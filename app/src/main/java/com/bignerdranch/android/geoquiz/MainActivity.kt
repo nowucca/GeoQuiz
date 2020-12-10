@@ -98,12 +98,12 @@ class MainActivity : AppCompatActivity() {
   }
 
   private fun previousQuestion() {
-    quizViewModel.moveToPrevious();
+    quizViewModel.moveToPrevious()
     updateQuestion()
   }
 
   private fun nextQuestion() {
-    quizViewModel.moveToNext();
+    quizViewModel.moveToNext()
     updateQuestion()
   }
 
