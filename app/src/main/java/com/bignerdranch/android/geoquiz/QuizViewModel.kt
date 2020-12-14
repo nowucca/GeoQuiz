@@ -2,7 +2,6 @@ package com.bignerdranch.android.geoquiz
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProviders
 
 
 private const val TAG = "QuizViewModel"
