@@ -2,24 +2,17 @@ package com.bignerdranch.android.geoquiz
 
 import android.os.Bundle
 import android.util.Log
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.bignerdranch.android.geoquiz.databinding.ActivityMainBinding
 
 private const val TAG = "MainActivity"
 private const val KEY_INDEX = "index"
 
 class MainActivity : AppCompatActivity() {
 
-  private lateinit var trueButton: Button
-  private lateinit var falseButton: Button
-  private lateinit var nextButton: ImageButton
-  private lateinit var previousButton: ImageButton
-  private lateinit var questionTextView: TextView
-
+  private lateinit var binding: ActivityMainBinding
 
   private val quizViewModel: QuizViewModel by lazy {
     ViewModelProvider(this).get(QuizViewModel::class.java)
@@ -28,7 +21,8 @@ class MainActivity : AppCompatActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     Log.d(TAG, "onCreate(Bundle?) called")
-    setContentView(R.layout.activity_main)
+    binding = ActivityMainBinding.inflate(layoutInflater)
+    setContentView(binding.root)
 
     val provider = ViewModelProvider(this)
     val quizViewModel = provider.get(QuizViewModel::class.java)
@@ -37,29 +31,23 @@ class MainActivity : AppCompatActivity() {
     quizViewModel.currentIndex =
       savedInstanceState?.getInt(KEY_INDEX, 0) ?: 0
 
-    trueButton = findViewById(R.id.true_button)
-    falseButton = findViewById(R.id.false_button)
-    nextButton = findViewById(R.id.next_button)
-    previousButton = findViewById(R.id.previous_button)
-    questionTextView = findViewById(R.id.question_text_view)
-
-    trueButton.setOnClickListener {
+    binding.trueButton.setOnClickListener {
       checkAnswer(true)
     }
 
-    falseButton.setOnClickListener {
+    binding.falseButton.setOnClickListener {
       checkAnswer(false)
     }
 
-    previousButton.setOnClickListener {
+    binding.previousButton.setOnClickListener {
       previousQuestion()
     }
 
-    nextButton.setOnClickListener {
+    binding.nextButton.setOnClickListener {
       nextQuestion()
     }
 
-    questionTextView.setOnClickListener {
+    binding.questionTextView.setOnClickListener {
       nextQuestion()
     }
 
@@ -109,9 +97,9 @@ class MainActivity : AppCompatActivity() {
 
   private fun updateQuestion() {
     val questionTextResId = quizViewModel.currentQuestionText
-    questionTextView.setText(questionTextResId)
-    trueButton.isEnabled = quizViewModel.currentQuestionEnabled
-    falseButton.isEnabled = quizViewModel.currentQuestionEnabled
+    binding.questionTextView.setText(questionTextResId)
+    binding.trueButton.isEnabled = quizViewModel.currentQuestionEnabled
+    binding.falseButton.isEnabled = quizViewModel.currentQuestionEnabled
   }
 
   private fun checkAnswer(userAnswer: Boolean) {
