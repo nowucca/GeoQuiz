@@ -42,7 +42,7 @@ class QuizViewModel : ViewModel() {
 
   fun moveToPrevious() {
     currentIndex = (currentIndex - 1)
-    Log.d(TAG, "Current index set to "+currentIndex)
+    Log.d(TAG, "Current index set to $currentIndex")
     if (currentIndex < 0) currentIndex += questionBank.size
   }
 

@@ -12,11 +12,11 @@ data class Question(
 
   fun submitAnswer(providedAnswer: Boolean) {
     this.providedAnswer = providedAnswer
-    this.isEnabled = false;
+    this.isEnabled = false
   }
 
   fun isAnswered(): Boolean {
-    return providedAnswer != null;
+    return providedAnswer != null
   }
 
   fun isCorrect(): Boolean {
